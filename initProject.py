@@ -36,12 +36,12 @@ class Git:
                 gitignore = ""
             with open(Git.FILE_GITIGNORE, "wb") as f:
                 f.write(gitignore)
-                f.write(str.encode("\n\n"))
+                f.write(str.encode("\n"))
         self.addToGit(Git.FILE_GITIGNORE)
 
     def addToGitignore(self, someThink):
         with open(Git.FILE_GITIGNORE, "ab") as f:
-            f.write(str.encode(someThink+"\n"))
+            f.write(str.encode(someThink + "\n"))
         self.addToGit(Git.FILE_GITIGNORE)
 
 
@@ -68,7 +68,7 @@ def initPython(argv):
         for module in requirements:
             call([pip, "install", "--no-cache-dir", module])
 
-    call([pip, "freeze", ">", FILE_REQUIREMENTS])
+    system("{} freeze > {}".format(pip, FILE_REQUIREMENTS))
 
     with open("activate.bat", "w") as f:
         f.write(activate)
