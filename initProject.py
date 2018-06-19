@@ -48,7 +48,7 @@ class Git:
         self.addToGit(Git.FILE_GITIGNORE)
 
 
-def initPython():
+def initPython(*argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore"
     VENV = "venv"
     FILE_REQUIREMENTS = "requirements.txt"
@@ -59,15 +59,13 @@ def initPython():
     if VENV not in listdir():
         print("Creation of virtual environments")
         call(["python", "-m", "venv", VENV])
-    #pip = r"{}\Scripts\pip".format(VENV)
+
     pip = join(VENV, "Scripts", "pip")
-    #activate = r"{}\Scripts\activate".format(VENV)
     activate = join(VENV, "Scripts", "activate")
-    #python = r"{}\Scripts\python".format(VENV)
     python = join(VENV, "Scripts", "python")
 
     print("Install requirements")
-    #call([python, "-m", "pip", "install", "--upgrade", "pip"])
+    call([python, "-m", "pip", "install", "--upgrade", "pip"])
     if "requirements.txt" in listdir():
         call([pip, "install", "-r", "requirements.txt"])
     else:
@@ -86,21 +84,21 @@ def initPython():
     git.commitGit()
 
 
-def initC():
+def initC(*argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/C.gitignore"
     git = Git(GITIGNORE)
     git.addGitignore()
     git.commitGit()
 
 
-def initCpp():
+def initCpp(*argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/C%2B%2B.gitignore"
     git = Git(GITIGNORE)
     git.addGitignore()
     git.commitGit()
 
 
-def initJava():
+def initJava(*argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/Java.gitignore"
     git = Git(GITIGNORE)
     git.addGitignore()
@@ -117,9 +115,6 @@ def main():
 
     elif argv[1].lower() in dictFunction:
         dictFunction[argv[1].lower()]()
-        ic()
-        ic(argv)
-        ic(argv[2])
 
     else:
         print(dictFunction)
