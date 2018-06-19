@@ -19,17 +19,14 @@ class Git:
         self.adres = adres
 
     def commitGit(self):
-        ic()
         print("commit Git")
         call(["git", "commit", "--all"])
 
     def addToGit(self, someThink):
-        ic()
         print("Add to git {}".format(someThink))
         call(["git", "add", someThink])
 
     def addGitignore(self,):
-        ic()
         if Git.FILE_GITIGNORE not in listdir():
             if self.adres:
                 print("Download .gitignore")
@@ -42,13 +39,12 @@ class Git:
         self.addToGit(Git.FILE_GITIGNORE)
 
     def addToGitignore(self, someThink):
-        ic()
         with open(Git.FILE_GITIGNORE, "ab") as f:
             f.write(str.encode(someThink))
         self.addToGit(Git.FILE_GITIGNORE)
 
 
-def initPython(*argv):
+def initPython(argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore"
     VENV = "venv"
     FILE_REQUIREMENTS = "requirements.txt"
@@ -84,37 +80,45 @@ def initPython(*argv):
     git.commitGit()
 
 
-def initC(*argv):
+def initC(argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/C.gitignore"
     git = Git(GITIGNORE)
     git.addGitignore()
     git.commitGit()
 
 
-def initCpp(*argv):
+def initCpp(argv):
+    ic(argv)
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/C%2B%2B.gitignore"
     git = Git(GITIGNORE)
     git.addGitignore()
     git.commitGit()
 
 
-def initJava(*argv):
+def initJava(argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/Java.gitignore"
     git = Git(GITIGNORE)
     git.addGitignore()
     git.commitGit()
 
 
+def help(argv):
+    if not argv:
+        for func in dictFunction:
+            print(func)
+
+
+dictFunction = {"python": initPython,
+                "java": initJava, "c": initC, "cpp": initCpp}
+
+
 def main():
-    dictFunction = {"python": initPython,
-                    "java": initJava, "c": initC, "cpp": initCpp}
     if len(argv) == 1:
         print("add some think like")
-        for fun in dictFunction:
-            print(fun)
+        help()
 
     elif argv[1].lower() in dictFunction:
-        dictFunction[argv[1].lower()]()
+        dictFunction[argv[1].lower()](argv[2:])
 
     else:
         print(dictFunction)
