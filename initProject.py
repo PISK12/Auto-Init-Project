@@ -70,7 +70,7 @@ def initPython(argv):
     call([pip, "freeze", ">", FILE_REQUIREMENTS])
 
     with open("activate.bat", "w") as f:
-        f.write("echo off")
+        f.write("echo off\n")
         f.write(activate)
 
     git = Git(GITIGNORE)
