@@ -2,72 +2,124 @@ from sys import platform as _platform
 from sys import argv
 from subprocess import call
 from os import listdir, system
+from os.path import join
 from urllib.request import urlopen
 
-
-def download_txt(adres):
-    return urlopen(adres).read()
+from icecream import ic
 
 
-def initGit(adres):
-    print("Creation of Git")
-    call(["git", "init", ])
-    gitignore = download_txt(adres)
-    with open(".gitignore", "wb") as f:
-        f.write(gitignore)
-    call(["git", "add", ".gitignore"])
+class Git:
+    FILE_GITIGNORE = ".gitignore"
+    FILE_GIT = ".git"
+
+    def __init__(self, adres=""):
+        if Git.FILE_GIT not in listdir():
+            print("Creation of Git")
+            call(["git", "init", ])
+        self.adres = adres
+
+    def commitGit(self):
+        ic()
+        print("commit Git")
+        call(["git", "commit", "--all"])
+
+    def addToGit(self, someThink):
+        ic()
+        print("Add to git {}".format(someThink))
+        call(["git", "add", someThink])
+
+    def addGitignore(self,):
+        ic()
+        if Git.FILE_GITIGNORE not in listdir():
+            if self.adres:
+                print("Download .gitignore")
+                gitignore = urlopen(self.adres).read()
+            else:
+                print("Gitignore is empty")
+                gitignore = ""
+            with open(Git.FILE_GITIGNORE, "wb") as f:
+                f.write(gitignore)
+        self.addToGit(Git.FILE_GITIGNORE)
+
+    def addToGitignore(self, someThink):
+        ic()
+        with open(Git.FILE_GITIGNORE, "ab") as f:
+            f.write(str.encode(someThink))
+        self.addToGit(Git.FILE_GITIGNORE)
 
 
 def initPython():
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore"
     VENV = "venv"
-    requirements = ["icecream", ]
+    FILE_REQUIREMENTS = "requirements.txt"
 
-    print("Creation of virtual environments")
-    call(["python", "-m", "venv", VENV])
-    pip = r"{}\Scripts\pip".format(VENV)
-    activate = r"{}\Scripts\activate".format(VENV)
-    python = r"{}\Scripts\python".format(VENV)
+    requirements = ["icecream", "pyinstaller"]
+    requirements = []
 
-    initGit(GITIGNORE)
+    if VENV not in listdir():
+        print("Creation of virtual environments")
+        call(["python", "-m", "venv", VENV])
+    #pip = r"{}\Scripts\pip".format(VENV)
+    pip = join(VENV, "Scripts", "pip")
+    #activate = r"{}\Scripts\activate".format(VENV)
+    activate = join(VENV, "Scripts", "activate")
+    #python = r"{}\Scripts\python".format(VENV)
+    python = join(VENV, "Scripts", "python")
 
     print("Install requirements")
-    call([python, "-m", "pip", "install", "--upgrade", "pip"])
+    #call([python, "-m", "pip", "install", "--upgrade", "pip"])
     if "requirements.txt" in listdir():
         call([pip, "install", "-r", "requirements.txt"])
     else:
         for module in requirements:
             call([pip, "install", "--no-cache-dir", module])
-    system("{} freeze > requirements.txt".format(pip))
+
+    call([pip, "freeze", ">", FILE_REQUIREMENTS])
 
     with open("activate.bat", "w") as f:
         f.write(activate)
 
+    git = Git(GITIGNORE)
+    git.addToGit(FILE_REQUIREMENTS)
+    git.addGitignore()
+    git.addToGitignore("activate.bat")
+    git.commitGit()
+
 
 def initC():
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/C.gitignore"
-    initGit(GITIGNORE)
+    git = Git(GITIGNORE)
+    git.addGitignore()
+    git.commitGit()
 
 
 def initCpp():
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/C%2B%2B.gitignore"
-    initGit(GITIGNORE)
+    git = Git(GITIGNORE)
+    git.addGitignore()
+    git.commitGit()
 
 
 def initJava():
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/Java.gitignore"
-    initGit(GITIGNORE)
+    git = Git(GITIGNORE)
+    git.addGitignore()
+    git.commitGit()
 
 
 def main():
     dictFunction = {"python": initPython,
                     "java": initJava, "c": initC, "cpp": initCpp}
     if len(argv) == 1:
-        print("run init python")
-        initPython()
+        print("add some think like")
+        for fun in dictFunction:
+            print(fun)
 
     elif argv[1].lower() in dictFunction:
         dictFunction[argv[1].lower()]()
+        ic()
+        ic(argv)
+        ic(argv[2])
 
     else:
         print(dictFunction)
