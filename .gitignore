@@ -102,8 +102,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
-
-activate.bat
-activate.bat
 activate.bat

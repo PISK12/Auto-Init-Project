@@ -36,13 +36,19 @@ class Git:
                 gitignore = ""
             with open(Git.FILE_GITIGNORE, "wb") as f:
                 f.write(gitignore)
-                f.write(str.encode("\n"))
         self.addToGit(Git.FILE_GITIGNORE)
 
     def addToGitignore(self, someThink):
-        with open(Git.FILE_GITIGNORE, "ab") as f:
-            f.write(str.encode(someThink + "\n"))
-        self.addToGit(Git.FILE_GITIGNORE)
+        flag = False
+        someThink = str.encode(someThink)
+        with open(Git.FILE_GITIGNORE, "rb") as f:
+            for line in f.readlines():
+                if someThink in line:
+                    flag = True
+        if not flag:
+            with open(Git.FILE_GITIGNORE, "ab") as f:
+                f.write(someThink + str.encode("\n"))
+            self.addToGit(Git.FILE_GITIGNORE)
 
 
 def initPython(argv):
@@ -60,14 +66,16 @@ def initPython(argv):
     activate = join(VENV, "Scripts", "activate")
     python = join(VENV, "Scripts", "python")
 
-    print("Install requirements")
-    call([python, "-m", "pip", "install", "--upgrade", "pip"])
-    if "requirements.txt" in listdir():
-        call([pip, "install", "-r", "requirements.txt"])
-    else:
-        for module in requirements:
-            call([pip, "install", "--no-cache-dir", module])
+    if "fast" not in argv:
+        print("Install requirements")
+        call([python, "-m", "pip", "install", "--upgrade", "pip"])
+        if "requirements.txt" in listdir():
+            call([pip, "install", "-r", "requirements.txt"])
+        else:
+            for module in requirements:
+                call([pip, "install", "--no-cache-dir", module])
 
+    # I dont know why but if I use call Terminal give me some error
     system("{} freeze > {}".format(pip, FILE_REQUIREMENTS))
 
     with open("activate.bat", "w") as f:
