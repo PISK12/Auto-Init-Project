@@ -40,7 +40,7 @@ class Git:
 
     def addToGitignore(self, someThink):
         with open(Git.FILE_GITIGNORE, "ab") as f:
-            f.write(str.encode("\n"+someThink+"\n"))
+            f.write(str.encode("\n" + someThink + "\n"))
         self.addToGit(Git.FILE_GITIGNORE)
 
 
@@ -70,6 +70,7 @@ def initPython(argv):
     call([pip, "freeze", ">", FILE_REQUIREMENTS])
 
     with open("activate.bat", "w") as f:
+        f.write("echo off")
         f.write(activate)
 
     git = Git(GITIGNORE)
