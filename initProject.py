@@ -40,7 +40,7 @@ class Git:
 
     def addToGitignore(self, someThink):
         with open(Git.FILE_GITIGNORE, "ab") as f:
-            f.write(str.encode(someThink))
+            f.write(str.encode("\n"+someThink+"\n"))
         self.addToGit(Git.FILE_GITIGNORE)
 
 
@@ -50,7 +50,6 @@ def initPython(argv):
     FILE_REQUIREMENTS = "requirements.txt"
 
     requirements = ["icecream", "pyinstaller"]
-    requirements = []
 
     if VENV not in listdir():
         print("Creation of virtual environments")
