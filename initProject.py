@@ -121,15 +121,11 @@ dictFunction = {"python": initPython,
 
 
 def main():
-    if len(argv) == 1:
-        print("add some think like")
-        help()
-
-    elif argv[1].lower() in dictFunction:
+    if argv[1].lower() in dictFunction:
         dictFunction[argv[1].lower()](argv[2:])
 
     else:
-        print(dictFunction)
+        help()
 
 
 if __name__ == '__main__':
