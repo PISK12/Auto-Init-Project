@@ -36,6 +36,7 @@ class Git:
                 gitignore = ""
             with open(Git.FILE_GITIGNORE, "wb") as f:
                 f.write(gitignore)
+                f.write(str.encode("\n\n"))
         self.addToGit(Git.FILE_GITIGNORE)
 
     def addToGitignore(self, someThink):
