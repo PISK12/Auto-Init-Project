@@ -33,7 +33,7 @@ class Git:
                 gitignore = urlopen(self.adres).read()
             else:
                 print("Gitignore is empty")
-                gitignore = ""
+                gitignore = str.encode("")
             with open(Git.FILE_GITIGNORE, "wb") as f:
                 f.write(gitignore)
         self.addToGit(Git.FILE_GITIGNORE)
@@ -49,6 +49,12 @@ class Git:
             with open(Git.FILE_GITIGNORE, "ab") as f:
                 f.write(someThink + str.encode("\n"))
             self.addToGit(Git.FILE_GITIGNORE)
+
+
+def makeEmptyFile(fileName):
+    if fileName not in listdir():
+        with open(fileName, "wb") as f:
+            f.write(b"")
 
 
 def initPython(argv):
@@ -81,8 +87,12 @@ def initPython(argv):
     with open("activate.bat", "w") as f:
         f.write(activate)
 
+    nameEmptyFile = "main.py"
+    makeEmptyFile(nameEmptyFile)
+
     git = Git(GITIGNORE)
     git.addToGit(FILE_REQUIREMENTS)
+    git.addToGit(nameEmptyFile)
     git.addGitignore()
     git.addToGitignore("activate.bat")
     git.commitGit()
@@ -90,22 +100,37 @@ def initPython(argv):
 
 def initC(argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/C.gitignore"
+    nameEmptyFile = "main.c"
+    makeEmptyFile(nameEmptyFile)
     git = Git(GITIGNORE)
     git.addGitignore()
+    git.addToGit(nameEmptyFile)
     git.commitGit()
 
 
 def initCpp(argv):
     ic(argv)
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/C%2B%2B.gitignore"
+    nameEmptyFile = "main.cpp"
+    makeEmptyFile(nameEmptyFile)
     git = Git(GITIGNORE)
     git.addGitignore()
+    git.addToGit(nameEmptyFile)
     git.commitGit()
 
 
 def initJava(argv):
     GITIGNORE = "https://raw.githubusercontent.com/github/gitignore/master/Java.gitignore"
+    nameEmptyFile = "main.java"
+    makeEmptyFile(nameEmptyFile)
     git = Git(GITIGNORE)
+    git.addGitignore()
+    git.addToGit(nameEmptyFile)
+    git.commitGit()
+
+
+def onlyGit(argv):
+    git = Git()
     git.addGitignore()
     git.commitGit()
 
@@ -117,11 +142,14 @@ def help(argv):
 
 
 dictFunction = {"python": initPython,
-                "java": initJava, "c": initC, "cpp": initCpp}
+                "java": initJava, "c": initC, "cpp": initCpp, "git": onlyGit}
 
 
 def main():
-    if argv[1].lower() in dictFunction:
+    if len(argv) == 1:
+        help(argv[2:])
+
+    elif argv[1].lower() in dictFunction:
         dictFunction[argv[1].lower()](argv[2:])
 
     else:
